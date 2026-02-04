@@ -65,7 +65,7 @@ class SupabaseAuthService {
         email: email,
         password: password,
         data: {
-          if (name != null) 'name': name,
+          'name': ?name,
         },
       );
 

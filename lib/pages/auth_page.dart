@@ -36,7 +36,6 @@ class _AuthPageState extends State<AuthPage> {
   bool _isLoading = false;
 
   // User info
-  UserInfo? _currentUser;
 
   @override
   void initState() {
@@ -469,7 +468,6 @@ class _AuthPageState extends State<AuthPage> {
       }
 
       if (response.success && response.user != null) {
-        setState(() => _currentUser = response.user);
         if (mounted) {
           _showSuccessToast(widget.isLogin ? 'Sign in successful!' : 'Account created successfully!');
         }

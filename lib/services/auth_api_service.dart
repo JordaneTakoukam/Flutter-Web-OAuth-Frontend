@@ -55,7 +55,7 @@ class AuthApiService {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'code': code,
-          if (name != null) 'name': name,
+          'name': ?name,
         }),
       );
 

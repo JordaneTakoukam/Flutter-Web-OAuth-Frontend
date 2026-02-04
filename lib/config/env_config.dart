@@ -9,21 +9,27 @@ class EnvConfig {
   static Future<void> init() async {
     if (_initialized) return;
     try {
-      await dotenv.load(fileName: '.env');
-      _initialized = true;
-    } catch (e) {
-      // Use default values if .env file is not found
+      await dotenv.load(fileName: '.env', isOptional: true);
+    } catch (_) {
+      // Ensure dotenv is initialized even if parsing/loading fails.
+      dotenv.testLoad(fileInput: '');
+    } finally {
       _initialized = true;
     }
   }
 
+  static String _get(String key, {String fallback = ''}) {
+    if (!dotenv.isInitialized) return fallback;
+    return dotenv.env[key] ?? fallback;
+  }
+
   /// Get the Supabase URL from environment
   static String get supabaseUrl =>
-      dotenv.env['SUPABASE_URL'] ?? '';
+      _get('SUPABASE_URL');
 
   /// Get the Supabase Anon Key from environment
   static String get supabaseAnonKey =>
-      dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+      _get('SUPABASE_ANON_KEY');
 
   /// Check if Supabase is configured
   static bool get isSupabaseConfigured =>
@@ -31,16 +37,16 @@ class EnvConfig {
 
   /// Get the API base URL from environment (optional, for additional proxy endpoints)
   static String get apiBaseUrl =>
-      dotenv.env['AUTH_API_URL'] ?? 'http://localhost:8080';
+      _get('AUTH_API_URL', fallback: 'http://localhost:8080');
 
   /// Get the app name
-  static String get appName => dotenv.env['APP_NAME'] ?? 'Auth Sandbox';
+  static String get appName => _get('APP_NAME', fallback: 'Auth Sandbox');
 
   /// OAuth redirect URL for Supabase (must be allowed in Supabase Auth settings)
   /// For Flutter web with go_router default hash strategy this is typically:
   /// http://localhost:3000/#/auth/callback
   static String get oauthRedirectTo =>
-      dotenv.env['OAUTH_REDIRECT_TO'] ?? '${Uri.base.origin}/#/auth/callback';
+      _get('OAUTH_REDIRECT_TO', fallback: '${Uri.base.origin}/#/auth/callback');
 
   /// Initialize Supabase
   static Future<void> initSupabase() async {
