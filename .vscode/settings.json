@@ -1,0 +1,8 @@
+{
+  "dart.flutterHotReloadOnSave": "true",
+  "dart.flutterHotRestartOnSave": "false",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  }
+}
